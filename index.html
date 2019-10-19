@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Аэропорт Саранска — неофициальное расписание рейсов</title>
+  <link rel="stylesheet" href="assets/style.css?7">
+  <meta name="viewport" content="minimal-ui">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+  <meta name="apple-touch-fullscreen" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="white" />
+
+  <link rel="apple-touch-icon" href="assets/app-icon.png" />
+  <link rel="apple-touch-startup-image" href="assets/app-icon.png">
+</head>
+
+<body>
+  <header class="page-header">
+    <h1 class="page-header__title">
+      Аэропорт Саранска
+    </h1>
+    <p class="page-header__description">неофициальное расписание рейсов</p>
+  </header>
+
+  <main class="schedule">
+    <ul class="schedule__list" id="app">
+    </ul>
+  </main>
+
+  <!--
+    http://cors-anywhere.herokuapp.com/http://www.aviamordovia.ru/schedule/Schedule.xml
+  -->
+
+  <script>
+
+    let url = 'Schedule.xml';
+    var xhr = new XMLHttpRequest();
+    let a;
+
+    // 2. Конфигурируем его: GET-запрос на URL 'phones.json'
+    xhr.open('GET', url, false);
+
+    // 3. Отсылаем запрос
+    xhr.send();
+
+    // 4. Если код ответа сервера не 200, то это ошибка
+    if (xhr.status != 200) {
+      // обработать ошибку
+      alert(xhr.status + ': ' + xhr.statusText); // пример вывода: 404: Not Found
+    } else {
+      // вывести результат
+      a = xhr.responseXML; // responseText -- текст ответа.
+    }
+
+
+    let scheduleList = a.getElementsByTagName('timetable');
+    let scheduleRows = scheduleList[0].getElementsByTagName('element');
+    let scheduleRowsArray = [];
+    let scheduleJSON = '[';
+    for (i = 0; i < scheduleRows.length; i++) {
+      scheduleRowsArray.push(scheduleRows[i].getElementsByTagName('*'));
+      scheduleJSON += '{';
+      for (j = 0; j < scheduleRowsArray[i].length; j++) {
+        if (scheduleRowsArray[i][j].tagName !== "ac_name") {
+          scheduleJSON = scheduleJSON + '"' + scheduleRowsArray[i][j].tagName + '":"' + scheduleRowsArray[i][j].textContent + '",';
+        }
+      };
+      scheduleJSON = scheduleJSON.slice(0, -1) + '},';
+    }
+    scheduleJSON = scheduleJSON.slice(0, -1) + ']';
+    let schedule = JSON.parse(scheduleJSON);
+
+    let citysList = [(schedule[0].full_route)];
+    for (m = 0; m < schedule.length; m++) {
+      let cityDumpHelper = 1;
+      let cityDump = schedule[m].full_route;
+      for (n = 0; n < citysList.length; n++) {
+        if (citysList[n] !== cityDump) {
+          cityDumpHelper = cityDumpHelper * 1;
+        } else {
+          cityDumpHelper = cityDumpHelper * 0;
+        }
+      }
+      if (cityDumpHelper) {
+        citysList.push(cityDump);
+      }
+    }
+    for (k = 0; k < citysList.length; k++) {
+      for (l = 0; l < citysList[k].length; l++) {
+        if (citysList[k][l] == '(' || citysList[k][l] == '/') {
+          citysList[k] = citysList[k].slice(0, l);
+        }
+      }
+    }
+    for (o = 0; o < citysList.length; o++) {
+      let cityDump = citysList[o];
+      let cityDumpHelper = 1;
+      for (p = 0; p < citysList.length; p++) {
+        if (citysList[p] == cityDump) {
+          cityDumpHelper += cityDumpHelper;
+        } else {
+          cityDumpHelper = cityDumpHelper;
+        }
+      }
+      if (cityDumpHelper > 2) {
+        citysList.splice(o, 1);
+      }
+    }
+
+    for (i = 0; i < citysList.length; i++) {
+      let startSpaces = 0;
+      let endSpaces = 0;
+      for (j = 0; j < 4; j++) {
+        if (citysList[i][j] == ' ') {
+          startSpaces += 1;
+        }
+      }
+      for (k = citysList[i].length; k > citysList[i].length - 4; k--) {
+        if (citysList[i][k] == ' ') {
+          endSpaces += 1;
+        }
+      }
+      citysList[i] = citysList[i].slice(startSpaces, (citysList[i].length - endSpaces));
+    }
+
+    let daysTemplate = ["пн", "вт", "ср", "чт", "пт", "сб", "вс"];
+
+    let mySchedule = '[';
+
+    for (i = 0; i < citysList.length; i++) {
+      mySchedule += `
+      {
+        "city" : "${citysList[i].toLowerCase()}",
+        "flights" : [`;
+      let cityFlightsAll = [];
+      let cityFlights = [];
+      for (z = 0; z < schedule.length; z++) {
+        if (schedule[z].to_ap_city_name == citysList[i] || schedule[z].from_ap_city_name == citysList[i]) {
+          cityFlightsAll.push(schedule[z].flight_N);
+        }
+      }
+      for (p = 0; p < cityFlightsAll.length; p++) {
+        cityFlights.push(cityFlightsAll[p]);
+        for (n = (cityFlights.length - 2); n >= 0; n--) {
+          if (cityFlightsAll[p] == cityFlights[n]) {
+            cityFlights.pop();
+          }
+        }
+      }
+      for (r = 0; r < cityFlights.length; r++) {
+        let shellData = undefined;
+        let airPort = undefined;
+        let fromSaransk = undefined;
+        for (s = 0; s < schedule.length; s++) {
+          if (schedule[s].flight_N == cityFlights[r]) {
+            shellData = schedule[s];
+            break;
+          }
+        }
+        if (shellData.from_ap_city_name !== "САРАНСК") {
+          fromSaransk = false;
+          airPort = shellData.from_ap_iata;
+        } else {
+          airPort = shellData.to_ap_iata;
+          fromSaransk = true;
+        }
+        mySchedule += `{
+            "flightNumber" : "${cityFlights[r]}",
+            "fromSaransk" : "${fromSaransk}",
+            "company" : "${shellData.ac_iata}",
+            "airPort" : "${airPort}",
+            "parts" : [`;
+        for (k = 0; k < schedule.length; k++) {
+          if (schedule[k].flight_N == cityFlights[r]) {
+            mySchedule += `{
+                "days" : [`;
+            let daysDraft = schedule[k].days_N.split('');
+            let days = [];
+            for (l = 0; l < daysDraft.length; l++) {
+              if (daysDraft[l] !== '.') {
+                days.push(daysTemplate[l]);
+              }
+            }
+            for (m = 0; m < days.length; m++) {
+              mySchedule += `"${days[m]}", `;
+            }
+            mySchedule = `${mySchedule.slice(0, -2)}], `;
+            mySchedule += `
+                "timeFrom" : "${schedule[k].from_time}",
+                "timeTo" : "${schedule[k].to_time}",
+                "dataBegin" : "${schedule[k].data_begin}",
+                "dataEnd" : "${schedule[k].data_end}"
+                },`;
+          }
+        }
+        mySchedule = `${mySchedule.slice(0, -1)}]}, `;
+      }
+      mySchedule = `${mySchedule.slice(0, -2)}]}, `;
+    }
+    mySchedule = `${mySchedule.slice(0, -2)}] `;
+    let myScheduleList = JSON.parse(mySchedule);
+    console.log(myScheduleList);
+
+    let appText = ``;
+
+    for (i = 0; i < myScheduleList.length; i++) {
+      appText += `
+      <li class="schedule__city-item" id="${i}">
+        <article class="schedule__city">
+          <h2 class="schedule__city-header">${myScheduleList[i].city}</h2>
+          <ul class="schedule__city-nav" onclick="tabSwitcher(${i})">
+            <li class="schedule__city-tab schedule__city-tab--current"><span class="schedule__city-tab-text">Из Саранска</span></li>
+            <li class="schedule__city-tab"><span class="schedule__city-tab-text">В Саранск</span></li>
+          </ul>
+          <div class="schedule__city-direction">
+            <h3 class="visually-hidden">Из Саранска</h3>
+            <ul class="schedule__city-flightslist">
+      `;
+      for (j = 0; j < myScheduleList[i].flights.length; j++) {
+        if (myScheduleList[i].flights[j].fromSaransk == "true") {
+          appText += `
+          <li class="schedule__flightslist-item">
+            <section class="flight">
+              <h4 class="flight__header">Саранск<span class="flight__aircraft-arrow"> — </span>${myScheduleList[i].city}</h4>
+              <ul class="flight__parts">
+          `;
+          for (k = 0; k < myScheduleList[i].flights[j].parts.length; k++) {
+            appText += `
+            <li class="flight__part-item">
+              <p class="flight__days flight__days--period">с ${myScheduleList[i].flights[j].parts[k].dataBegin} по ${myScheduleList[i].flights[j].parts[k].dataEnd}</p>
+              <p class="flight__days">${myScheduleList[i].flights[j].parts[k].days.join(', ')}</p>
+              <p class="flight__time">
+                <span class="flight__time-from">${myScheduleList[i].flights[j].parts[k].timeFrom}</span> <span class="flight__time-arrow">—</span> <span class="flight__time-to">${myScheduleList[i].flights[j].parts[k].timeTo}</span>
+              </p>
+            </li>
+            `;
+          }
+          appText += `
+          </ul>
+          <div class="flight__flight-info">
+            <p class="flight__flight-number">${myScheduleList[i].flights[j].flightNumber}</p>
+            <div class="flight__ac-id flight__ac-id--7R">Авиакомпания ${myScheduleList[i].flights[j].company}
+              <img src="assets/icons/${myScheduleList[i].flights[j].company}.svg" alt="">
+            </div>
+          </div>
+          </section>
+          </li>
+          `;
+        }
+      }
+      appText += `
+      </ul>
+      </div>
+      <div class="schedule__city-direction schedule__city-direction--hidden">
+        <h3 class="visually-hidden">В Саранск</h3>
+        <ul class="schedule__city-flightslist">
+          `;
+      for (j = 0; j < myScheduleList[i].flights.length; j++) {
+        if (myScheduleList[i].flights[j].fromSaransk == "false") {
+          appText += `
+          <li class="schedule__flightslist-item">
+            <section class="flight">
+              <h4 class="flight__header">${myScheduleList[i].city}<span class="flight__aircraft-arrow"> — </span>Саранск</h4>
+              <ul class="flight__parts">
+          `;
+          for (k = 0; k < myScheduleList[i].flights[j].parts.length; k++) {
+            appText += `
+            <li class="flight__part-item">
+              <p class="flight__days flight__days--period">с ${myScheduleList[i].flights[j].parts[k].dataBegin} по ${myScheduleList[i].flights[j].parts[k].dataEnd}</p>
+              <p class="flight__days">${myScheduleList[i].flights[j].parts[k].days.join(', ')}</p>
+              <p class="flight__time">
+                <span class="flight__time-from">${myScheduleList[i].flights[j].parts[k].timeFrom}</span> <span class="flight__time-arrow">—</span> <span class="flight__time-to">${myScheduleList[i].flights[j].parts[k].timeTo}</span>
+              </p>
+            </li>
+            `;
+          }
+          appText += `
+          </ul>
+          <div class="flight__flight-info">
+            <p class="flight__flight-number">${myScheduleList[i].flights[j].flightNumber}</p>
+            <div class="flight__ac-id flight__ac-id--7R">Авиакомпания ${myScheduleList[i].flights[j].company}
+              <img src="assets/icons/${myScheduleList[i].flights[j].company}.svg" alt="">
+            </div>
+          </div>
+          </section>
+          </li>
+          `;
+        }
+      }
+      appText += `
+          </ul>
+          </div>
+          </article>
+          </li>
+          `;
+    }
+
+    let app = document.querySelector('#app');
+    app.innerHTML = appText;
+
+    function tabSwitcher(cityId) {
+      let cityItem = document.getElementById(cityId);
+      let cityTabs = cityItem.querySelectorAll('.schedule__city-tab');
+      let flightsDirections = cityItem.querySelectorAll('.schedule__city-direction');
+
+      for (i = 0; i < cityTabs.length; i++) {
+        cityTabs[i].classList.toggle('schedule__city-tab--current');
+      }
+      for (i = 0; i < flightsDirections.length; i++) {
+        flightsDirections[i].classList.toggle('schedule__city-direction--hidden');
+      }
+    }
+  </script>
+
+</body>
+
+</html>

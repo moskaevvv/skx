@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="app">
+    <ul>
+      <li v-for="city in citys">
+        <p class="city-row">{{ city.city }}</p>
+      </li>
+    </ul>
+  </div>
+
+  <!--
+    http://cors-anywhere.herokuapp.com/http://www.aviamordovia.ru/schedule/Schedule.xml
+  -->
+
+  <script>
+    let url = 'Schedule.xml';
+    var xhr = new XMLHttpRequest();
+    let a;
+
+    // 2. Конфигурируем его: GET-запрос на URL 'phones.json'
+    xhr.open('GET', url, false);
+
+    // 3. Отсылаем запрос
+    xhr.send();
+
+    // 4. Если код ответа сервера не 200, то это ошибка
+    if (xhr.status != 200) {
+      // обработать ошибку
+      alert(xhr.status + ': ' + xhr.statusText); // пример вывода: 404: Not Found
+    } else {
+      // вывести результат
+      a = xhr.responseXML; // responseText -- текст ответа.
+    }
+
+    let scheduleList = a.getElementsByTagName('timetable');
+    let scheduleRows = scheduleList[0].getElementsByTagName('element');
+    let scheduleRowsArray = [];
+    let scheduleJSON = '[';
+    for (i = 0; i < scheduleRows.length; i++) {
+      scheduleRowsArray.push(scheduleRows[i].getElementsByTagName('*'));
+      scheduleJSON += '{';
+      for (j = 0; j < scheduleRowsArray[i].length; j++) {
+        if (scheduleRowsArray[i][j].tagName !== "ac_name") {
+          scheduleJSON = scheduleJSON + '"' + scheduleRowsArray[i][j].tagName + '":"' + scheduleRowsArray[i][j].textContent + '",';
+        }
+      };
+      scheduleJSON = scheduleJSON.slice(0, -1) + '},';
+    }
+    scheduleJSON = scheduleJSON.slice(0, -1) + ']';
+    let schedule = JSON.parse(scheduleJSON);
+
+    let citysList = [(schedule[0].full_route)];
+    for (m = 0; m < schedule.length; m++) {
+      let cityDumpHelper = 1;
+      let cityDump = schedule[m].full_route;
+      for (n = 0; n < citysList.length; n++) {
+        if (citysList[n] !== cityDump) {
+          cityDumpHelper = cityDumpHelper * 1;
+        } else {
+          cityDumpHelper = cityDumpHelper * 0;
+        }
+      }
+      if (cityDumpHelper) {
+        citysList.push(cityDump);
+      }
+    }
+    for (k = 0; k < citysList.length; k++) {
+      for (l = 0; l < citysList[k].length; l++) {
+        if (citysList[k][l] == '(' || citysList[k][l] == '/') {
+          citysList[k] = citysList[k].slice(0, l);
+        }
+      }
+    }
+    for (o = 0; o < citysList.length; o++) {
+      let cityDump = citysList[o];
+      let cityDumpHelper = 1;
+      for (p = 0; p < citysList.length; p++) {
+        if (citysList[p] == cityDump) {
+          cityDumpHelper += cityDumpHelper;
+        } else {
+          cityDumpHelper = cityDumpHelper;
+        }
+      }
+      if (cityDumpHelper > 2) {
+        citysList.splice(o, 1);
+      }
+    }
+
+    for (i = 0; i < citysList.length; i++) {
+      let startSpaces = 0;
+      let endSpaces = 0;
+      for (j = 0; j < 4; j++) {
+        if (citysList[i][j] == ' ') {
+          startSpaces += 1;
+        }
+      }
+      for (k = citysList[i].length; k > citysList[i].length - 4; k--) {
+        if (citysList[i][k] == ' ') {
+          endSpaces += 1;
+        }
+      }
+      citysList[i] = citysList[i].slice(startSpaces, (citysList[i].length - endSpaces));
+    }
+
+    let daysTemplate = ["пн", "вт", "ср", "чт", "пт", "сб", "вс"];
+
+    let mySchedule = '[';
+
+    for (i = 0; i < citysList.length; i++) {
+      mySchedule += `
+      {
+        "city" : "${citysList[i].toLowerCase()}",
+        "flights" : [`;
+      let cityFlightsAll = [];
+      let cityFlights = [];
+      for (z = 0; z < schedule.length; z++) {
+        if (schedule[z].to_ap_city_name == citysList[i] || schedule[z].from_ap_city_name == citysList[i]) {
+          cityFlightsAll.push(schedule[z].flight_N);
+        }
+      }
+      for (p = 0; p < cityFlightsAll.length; p++) {
+        cityFlights.push(cityFlightsAll[p]);
+        for (n = (cityFlights.length - 2); n >= 0; n--) {
+          if (cityFlightsAll[p] == cityFlights[n]) {
+            cityFlights.pop();
+          }
+        }
+      }
+      for (r = 0; r < cityFlights.length; r++) {
+        let shellData = undefined;
+        let airPort = undefined;
+        let fromSaransk = undefined;
+        for (s = 0; s < schedule.length; s++) {
+          if (schedule[s].flight_N == cityFlights[r]) {
+            shellData = schedule[s];
+            break;
+          }
+        }
+        if (shellData.from_ap_city_name !== "САРАНСК") {
+          fromSaransk = true;
+          airPort = shellData.from_ap_iata;
+        } else {
+          airPort = shellData.to_ap_iata;
+          fromSaransk = false;
+        }
+        mySchedule += `{
+            "flightNumber" : "${cityFlights[r]}",
+            "fromSaransk" : "${fromSaransk}",
+            "company" : "${shellData.ac_name_short}",
+            "airPort" : "${airPort}",
+            "parts" : [`;
+        for (k = 0; k < schedule.length; k++) {
+          if (schedule[k].flight_N == cityFlights[r]) {
+            mySchedule += `{
+                "days" : [`;
+            let daysDraft = schedule[k].days_N.split('');
+            let days = [];
+            for (l = 0; l < daysDraft.length; l++) {
+              if (daysDraft[l] !== '.') {
+                days.push(daysTemplate[l]);
+              }
+            }
+            for (m = 0; m < days.length; m++) {
+              mySchedule += `"${days[m]}", `;
+            }
+            mySchedule = `${mySchedule.slice(0, -2)}], `;
+            mySchedule += `
+                "timeFrom" : "${schedule[k].from_time}",
+                "timeTo" : "${schedule[k].to_time}"
+                },`;
+          }
+        }
+        mySchedule = `${mySchedule.slice(0, -1)}]}, `;
+      }
+      mySchedule = `${mySchedule.slice(0, -2)}]}, `;
+    }
+    mySchedule = `${mySchedule.slice(0, -2)}] `;
+    let myScheduleList = JSON.parse(mySchedule);
+    console.log(myScheduleList);
+
+    var app = new Vue({
+      el: '#app',
+      data: {
+        citys: myScheduleList
+      }
+    })
+  </script>
+</body>
+
+</html>

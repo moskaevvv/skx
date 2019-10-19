@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="assets/style.css?7">
+</head>
+
+<body>
+
+  <main class="schedule">
+    <ul class="schedule__list" id="app">
+      <li class="schedule__city-item" id="0">
+        <article class="schedule__city">
+          <h2 class="schedule__city-header">Екатеринбург</h2>
+          <ul class="schedule__city-nav" onclick="tabSwitcher(0)">
+            <li class="schedule__city-tab schedule__city-tab--current"><span class="schedule__city-tab-text">Из Саранска</span></li>
+            <li class="schedule__city-tab"><span class="schedule__city-tab-text">В Саранск</span></li>
+          </ul>
+          <div class="schedule__city-direction">
+            <h3 class="visually-hidden">Из Саранска в Екатеринбург</h3>
+            <ul class="schedule__city-flightslist">
+              <li class="schedule__flightslist-item">
+                <section class="flight">
+                  <h4 class="flight__header">Екатеринбург<span class="flight__aircraft-arrow"> — </span>Саранск</h4>
+                  <ul class="flight__parts">
+                    <li class="flight__part-item">
+                      <p class="flight__days flight__days--period">с 10 по 26 октября</p>
+                      <p class="flight__days">чт, сб</p>
+                      <p class="flight__time">
+                        <span class="flight__time-from">19:20</span> <span class="flight__time-arrow">—</span> <span class="flight__time-to">19:10</span>
+                      </p>
+                    </li>
+                  </ul>
+                  <div class="flight__flight-info">
+                    <p class="flight__flight-number">7R426.</p>
+                    <div class="flight__ac-id flight__ac-id--7R">Авиакомпания РУСЛАЙН
+                      <img src="assets/icons/7R.svg" alt="">
+                    </div>
+                  </div>
+                </section>
+              </li>
+            </ul>
+          </div>
+          <div class="schedule__city-direction schedule__city-direction--hidden">
+            <h3 class="visually-hidden">Из Екатеринбурга в Саранск</h3>
+            <ul class="schedule__city-flightslist">
+              <li class="schedule__flightslist-item from-true">
+                <section class="flight">
+                  <h4 class="flight__header">Саранск<span class="flight__aircraft-arrow"> — </span>Екатеринбург</h4>
+                  <ul class="flight__parts">
+                    <li class="flight__part-item">
+                      <p class="flight__days flight__days--period">с 6 по 27 октября</p>
+                      <p class="flight__days">пт, вс</p>
+                      <p class="flight__time">
+                        <span class="flight__time-from">01:10</span> <span class="flight__time-arrow">—</span> <span class="flight__time-to">05:50</span>
+                      </p>
+                    </li>
+                  </ul>
+                  <div class="flight__flight-info">
+                    <p class="flight__flight-number">7R425</p>
+                    <div class="flight__ac-id flight__ac-id--7R">Авиакомпания РУСЛАЙН
+                      <img src="assets/icons/7R.svg" alt="">
+                    </div>
+                  </div>
+                </section>
+              </li>
+            </ul>
+          </div>
+        </article>
+      </li>
+    </ul>
+  </main>
+</body>
+
+</html>
