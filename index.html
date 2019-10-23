@@ -128,6 +128,7 @@
     }
 
     let daysTemplate = ["пн", "вт", "ср", "чт", "пт", "сб", "вс"];
+    // let daysTemplate = ["понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье"];
 
     let mySchedule = '[';
 
@@ -180,13 +181,34 @@
                 "days" : [`;
             let daysDraft = schedule[k].days_N.split('');
             let days = [];
+            let daysNumbers = [];
+            let daysString = 'X';
             for (l = 0; l < daysDraft.length; l++) {
               if (daysDraft[l] !== '.') {
                 days.push(daysTemplate[l]);
+                daysNumbers.push(l);
               }
             }
+            if ((days.length > 2) && (days.length == 7)) {
+                daysString = "каждый день";
+                days = [];
+              } else {
+                for (d = (daysNumbers.length - 1); d > 0; d--) {
+                  if (d == daysNumbers[d]) {
+                    daysString = `${days[0]} — ${days[daysNumbers[d]]}`;
+                    if (d !== (daysNumbers.length - 1)) {
+                      daysString += `, ${days[daysNumbers.length - 1]}`;
+                    }
+                    days = [];
+                    break;
+                  }
+                }
+              }
             for (m = 0; m < days.length; m++) {
               mySchedule += `"${days[m]}", `;
+            }
+            if (daysString !== 'X') {
+              mySchedule += `"${daysString}", `;
             }
             mySchedule = `${mySchedule.slice(0, -2)}], `;
             mySchedule += `
@@ -203,7 +225,6 @@
     }
     mySchedule = `${mySchedule.slice(0, -2)}] `;
     let myScheduleList = JSON.parse(mySchedule);
-    console.log(myScheduleList);
 
     let appText = ``;
 

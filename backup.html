@@ -199,3 +199,29 @@
 </body>
 
 </html>
+
+
+for (k = 0; k < schedule.length; k++) {
+  if (schedule[k].flight_N == cityFlights[r]) {
+    mySchedule += `{
+        "days" : [`;
+    let daysDraft = schedule[k].days_N.split('');
+    let days = [];
+    let daysNumbers = [];
+    for (l = 0; l < daysDraft.length; l++) {
+      if (daysDraft[l] !== '.') {
+        days.push(daysTemplate[l]);
+      }
+    }
+    for (m = 0; m < days.length; m++) {
+      mySchedule += `"${days[m]}", `;
+    }
+    mySchedule = `${mySchedule.slice(0, -2)}], `;
+    mySchedule += `
+        "timeFrom" : "${schedule[k].from_time}",
+        "timeTo" : "${schedule[k].to_time}",
+        "dataBegin" : "${schedule[k].data_begin}",
+        "dataEnd" : "${schedule[k].data_end}"
+        },`;
+  }
+}
