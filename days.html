@@ -10,63 +10,66 @@
 
 <body>
     <script>
-        let daysTemplate = ["пн", "вт", "ср", "чт", "пт", "сб", "вс"];
-        let days_N = "1..4567";
-        let daysDraft = days_N.split('');
-        let days = [];
-        let emptyDays = [];
-        let daysNumbers = [];
-        let daysString = "X";
+        let translateDays = function (days_N) {
+            let daysTemplate = ["пн", "вт", "ср", "чт", "пт", "сб", "вс"];
+            let daysDraft = days_N.split('');
+            let days = [];
+            let emptyDays = [];
+            let daysNumbers = [];
+            let daysString = "X";
 
-        for (i = 0; i < daysDraft.length; i++) {
-            if (daysDraft[i] !== '.') {
-                days.push(daysTemplate[i]);
-                daysNumbers.push(i);
-            } else {
-                emptyDays.push(i);
-            }
-        }
-
-
-        if (emptyDays.length < 1) {
-            daysString = "каждый день";
-        } else if (emptyDays.length < 2) {
-            daysString = `кроме ${daysTemplate[emptyDays[0]]}`;
-        } else {
-            let pointIndex = +daysDraft[daysNumbers[0]];
-
-            daysString = "";
-            for (i = 0; i < emptyDays.length; i++) {
-
-                if (emptyDays[i] > (pointIndex - 1)) {
-                    if ((daysDraft[emptyDays[i] - 1] - pointIndex) > 1) {
-                        daysString += `${daysTemplate[pointIndex - 1]}—${daysTemplate[emptyDays[i] - 1]}, `;
-                    } else if ((daysDraft[emptyDays[i] - 1] - pointIndex) > 0) {
-                        daysString += `${daysTemplate[pointIndex - 1]}, ${daysTemplate[emptyDays[i] - 1]}, `;
-                    } else if ((daysDraft[emptyDays[i] - 1] - pointIndex) == 0) {
-                        daysString += `${daysTemplate[pointIndex - 1]}, `;
-                    }
+            for (i = 0; i < daysDraft.length; i++) {
+                if (daysDraft[i] !== '.') {
+                    days.push(daysTemplate[i]);
+                    daysNumbers.push(i);
+                } else {
+                    emptyDays.push(i);
                 }
-                for (j = emptyDays[i]; j < daysDraft.length; j++) {
+            }
+
+
+            if (emptyDays.length < 1) {
+                daysString = "каждый день";
+            } else if (emptyDays.length < 2) {
+                daysString = `кроме ${daysTemplate[emptyDays[0]]}`;
+            } else {
+                let pointIndex = +daysDraft[daysNumbers[0]];
+
+                daysString = "";
+                for (i = 0; i < emptyDays.length; i++) {
+
+                    if (emptyDays[i] > (pointIndex - 1)) {
+                        if ((daysDraft[emptyDays[i] - 1] - pointIndex) > 1) {
+                            daysString += `${daysTemplate[pointIndex - 1]}—${daysTemplate[emptyDays[i] - 1]}, `;
+                        } else if ((daysDraft[emptyDays[i] - 1] - pointIndex) > 0) {
+                            daysString += `${daysTemplate[pointIndex - 1]}, ${daysTemplate[emptyDays[i] - 1]}, `;
+                        } else if ((daysDraft[emptyDays[i] - 1] - pointIndex) == 0) {
+                            daysString += `${daysTemplate[pointIndex - 1]}, `;
+                        }
+                    }
+                    for (j = emptyDays[i]; j < daysDraft.length; j++) {
                         if (daysDraft[j] !== ".") {
                             pointIndex = daysDraft[j];
                             break
                         }
                     }
-                if ((i == (emptyDays.length - 1)) && (emptyDays[i] < 6)) {
-                    if ((7 - daysDraft[emptyDays[i]+1]) > 1) {
-                        daysString += `${daysTemplate[emptyDays[i]+1]}—${daysTemplate[6]}, `;
-                    } else if ((7 - daysDraft[emptyDays[i]+1]) > 0) {
-                        daysString += `${daysTemplate[emptyDays[i]+1]}, ${daysTemplate[6]}, `;
-                    } else if ((7 - daysDraft[emptyDays[i]+1]) == 0) {
-                        daysString += `${daysTemplate[6]}, `;
-                    }
-                    daysString = daysString.slice(0, -2);
-                }
-            }
+                    if ((i == (emptyDays.length - 1)) && (emptyDays[i] < 6)) {
+                        if ((7 - daysDraft[emptyDays[i] + 1]) > 1) {
+                            daysString += `${daysTemplate[emptyDays[i]+1]}—${daysTemplate[6]}, `;
+                        } else if ((7 - daysDraft[emptyDays[i] + 1]) > 0) {
+                            daysString += `${daysTemplate[emptyDays[i]+1]}, ${daysTemplate[6]}, `;
+                        } else if ((7 - daysDraft[emptyDays[i] + 1]) == 0) {
+                            daysString += `${daysTemplate[6]}, `;
+                        }
 
+                    }
+                
+                }
+
+            }
+            daysString = daysString.slice(0, -2);
+            console.log(daysString);
         }
-        console.log(daysString);
     </script>
 </body>
 
