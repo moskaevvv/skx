@@ -196,16 +196,9 @@
               daysString = "каждый день";
             } else if (emptyDays.length < 2) {
               daysString = `кроме ${daysTemplate[emptyDays[0]]}`;
-            } /* else {
-              daysString = `${days[0]},`;
-              let tempDaysString = "";
-              let tempDaysIndex = 0;
-              for (r = 1; r < daysNumbers.length; r++) {
-                if ((daysNumbers[r] - daysNumbers[r-1]) = 1) {
-                  daysString = `${daysDraft[tempDaysIndex]}—${}`;
-                }
-              }
-            }*/
+            } else {
+              
+            }
             for (m = 0; m < days.length; m++) {
               mySchedule += `"${days[m]}", `;
             }

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        let daysTemplate = ["пн", "вт", "ср", "чт", "пт", "сб", "вс"];
+        let days_N = "123.56.";
+        let daysDraft = days_N.split('');
+        let days = [];
+        let emptyDays = [];
+        let daysNumbers = [];
+        let daysString = "X";
+        console.log(daysDraft);
+        for (i = 0; i < daysDraft.length; i++) {
+            if (daysDraft[i] !== '.') {
+                days.push(daysTemplate[i]);
+                daysNumbers.push(i);
+            } else {
+                emptyDays.push(i);
+            }
+        }
+        console.log(days);
+
+        if (emptyDays.length < 1) {
+            daysString = "каждый день";
+        } else if (emptyDays.length < 2) {
+            daysString = `кроме ${daysTemplate[emptyDays[0]]}`;
+        } else {
+            let pointIndex = +daysDraft[daysNumbers[0]];
+            console.log(pointIndex);
+            daysString = "";
+            for (i = 0; i < emptyDays.length; i++) {
+                if (emptyDays[i] > (pointIndex - 1)) {
+                    if ((daysDraft[emptyDays[i] - 1] - pointIndex) > 1) {
+                        daysString += `${daysTemplate[pointIndex - 1]}—${daysTemplate[emptyDays[i] - 1]}, `;
+                    } else if ((daysDraft[emptyDays[i] - 1] - pointIndex) > 0) {
+                        daysString += `${daysTemplate[pointIndex - 1]}, ${daysTemplate[emptyDays[i] - 1]}, `;
+                    } else if ((daysDraft[emptyDays[i] - 1] - pointIndex) == 0) {
+                        daysString += `${daysTemplate[pointIndex - 1]}, `;
+                    }
+                }
+                for (j = emptyDays[i]; j < daysDraft.length; j++) {
+                        if (daysDraft[j] !== ".") {
+                            pointIndex = daysDraft[j];
+                            console.log(pointIndex);
+                            break
+                        }
+                    }
+            }
+
+        }
+        console.log(daysString);
+
+        /*
+        for (m = 0; m < days.length; m++) {
+            mySchedule += `"${days[m]}", `;
+        }
+        if (daysString !== 'X') {
+            mySchedule += `"${daysString}", `;
+        }
+        */
+    </script>
+</body>
+
+</html>
