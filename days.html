@@ -11,7 +11,7 @@
 <body>
     <script>
         let daysTemplate = ["пн", "вт", "ср", "чт", "пт", "сб", "вс"];
-        let days_N = "..34567";
+        let days_N = "1..4567";
         let daysDraft = days_N.split('');
         let days = [];
         let emptyDays = [];
@@ -54,7 +54,6 @@
                         }
                     }
                 if ((i == (emptyDays.length - 1)) && (emptyDays[i] < 6)) {
-                    console.log(daysTemplate[emptyDays[i]+1]);
                     if ((7 - daysDraft[emptyDays[i]+1]) > 1) {
                         daysString += `${daysTemplate[emptyDays[i]+1]}—${daysTemplate[6]}, `;
                     } else if ((7 - daysDraft[emptyDays[i]+1]) > 0) {
@@ -62,6 +61,7 @@
                     } else if ((7 - daysDraft[emptyDays[i]+1]) == 0) {
                         daysString += `${daysTemplate[6]}, `;
                     }
+                    daysString = daysString.slice(0, -2);
                 }
             }
 
