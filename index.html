@@ -58,6 +58,7 @@
 
     let translateDays = function (days_N) {
             let daysTemplate = ["пн", "вт", "ср", "чт", "пт", "сб", "вс"];
+            let daysTemplateForm = ["понедельника", "вторника", "среды", "четверга", "пятницы", "субботы", "воскресенья"];
             let daysDraft = days_N.split('');
             let days = [];
             let emptyDays = [];
@@ -74,7 +75,7 @@
             if (emptyDays.length < 1) {
                 daysString = "каждый день";
             } else if (emptyDays.length < 2) {
-                daysString = `кроме ${daysTemplate[emptyDays[0]]}`;
+                daysString = `кроме ${daysTemplateForm[emptyDays[0]]}`;
             } else {
                 let pointIndex = +daysDraft[daysNumbers[0]];
                 daysString = "";
