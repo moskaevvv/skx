@@ -7,7 +7,7 @@ html {
 :root {
   --page-bg-color: #F4F4F4;
   --high-emphasis-text: rgba(0, 0, 0, 0.87);
-  --helper-text: rgba(0, 0, 0, 0.56);
+  --helper-text: rgba(0, 0, 0, 0.48);
   --page-main-padding: 16px;
 
   --regular-font-size: 13px;
@@ -177,6 +177,10 @@ body {
 }
 
 .flight__days--period {
+  color: var(--high-emphasis-text);
+}
+
+.helper-text {
   color: var(--helper-text);
 }
 

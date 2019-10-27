@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // Если дата одна и та же, не надо писать ее 2 раза
+        // Если год текущий, то показываем её в формате «12 июля»
+        let dates = {
+            dataBegin: "5.11.2019",
+            dataEnd: "10.11.2019"
+        };
+        let translateDates = function (intervalInfo) {
+            let date = new Date();
+            let currentYear = date.getFullYear();
+            let monthsTemplate = [
+                "января",
+                "февраля",
+                "марта",
+                "апреля",
+                "мая",
+                "июня",
+                "июля",
+                "августа",
+                "сентября",
+                "октября",
+                "ноября",
+                "декабря"
+            ];
+            let dateToArray = function (dateSource) {
+                return dateSource.split('');
+            }
+            let parseDateArray = function (dateArray) {
+                let tempArray = [];
+                let pointIndex = 0;
+                for (v = 0; v < dateArray.length; v++) {
+                    let dateParam = "";
+                    if ((dateArray[v] == ".") || (v == dateArray.length - 1)) {
+                        if (dateArray[v] == ".") {
+                            for (w = pointIndex; w < v; w++) {
+                                dateParam += dateArray[w];
+                            }
+                            pointIndex = v + 1;
+                            tempArray.push(dateParam);
+                        } else {
+                            for (w = pointIndex; w <= v; w++) {
+                                dateParam += dateArray[w];
+                            }
+                            tempArray.push(dateParam);
+                        }
+                    }
+                }
+                for (v = 1; v < 13; v++) {
+                    tempArray[0] = +tempArray[0];
+                    if ((tempArray[1] == v) && (tempArray[2] == currentYear)) {
+                        tempArray[1] = monthsTemplate[v - 1];
+                        tempArray.pop(tempArray[2]);
+                    }
+                }
+
+                if (tempArray.length < 3) {
+                    return [tempArray.join(" "), tempArray];
+                } else {
+                    return [tempArray.join("."), tempArray];
+                }
+
+            }
+            let datesString = "";
+            let dateBeginDraft = dateToArray(intervalInfo.dataBegin);
+            let dateEndDraft = dateToArray(intervalInfo.dataEnd);
+            let dateBeginData = parseDateArray(dateBeginDraft);
+            let dateEndData = parseDateArray(dateEndDraft);
+            let prePart = "С"
+            if (dateBeginData[1][0] == 2) {
+                prePart = "Со"
+            }
+            if ((dateBeginData[1].length == dateEndData[1].length) && (dateBeginData[1][1] == dateEndData[1][1])) {
+                dateBeginData[0] = dateBeginData[1][0];
+            }
+            if (intervalInfo.dataBegin == intervalInfo.dataEnd) {
+                datesString = `${dateEndData[0]}`;
+            } else {
+                datesString = `${prePart} ${dateBeginData[0]} по ${dateEndData[0]}`;
+            }
+            return datesString;
+        }
+
+        translateDates(dates);
+    </script>
+</body>
+
+</html>

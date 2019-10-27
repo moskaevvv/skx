@@ -107,8 +107,84 @@
                 }
                 daysString = daysString.slice(0, -2);
             }
-            console.log(daysString);
             return daysString;
+        }
+
+        let translateDates = function (firstDate, secondDate) {
+            let date = new Date();
+            let currentYear = date.getFullYear();
+            let monthsTemplate = [
+                "января",
+                "февраля",
+                "марта",
+                "апреля",
+                "мая",
+                "июня",
+                "июля",
+                "августа",
+                "сентября",
+                "октября",
+                "ноября",
+                "декабря"
+            ];
+            let dateToArray = function (dateSource) {
+                return dateSource.split('');
+            }
+            let parseDateArray = function (dateArray) {
+                let tempArray = [];
+                let pointIndex = 0;
+                for (v = 0; v < dateArray.length; v++) {
+                    let dateParam = "";
+                    if ((dateArray[v] == ".") || (v == dateArray.length - 1)) {
+                        if (dateArray[v] == ".") {
+                            for (w = pointIndex; w < v; w++) {
+                                dateParam += dateArray[w];
+                            }
+                            pointIndex = v + 1;
+                            tempArray.push(dateParam);
+                        } else {
+                            for (w = pointIndex; w <= v; w++) {
+                                dateParam += dateArray[w];
+                            }
+                            tempArray.push(dateParam);
+                        }
+                    }
+                }
+                for (v = 1; v < 13; v++) {
+                    tempArray[0] = +tempArray[0];
+                    if ((tempArray[1] == v) && (tempArray[2] == currentYear)) {
+                        tempArray[1] = monthsTemplate[v - 1];
+                        tempArray.pop(tempArray[2]);
+                    }
+                }
+
+                if (tempArray.length < 3) {
+                    return [tempArray.join(" "), tempArray];
+                } else {
+                    return [tempArray.join("."), tempArray];
+                }
+
+            }
+            let datesString = "";
+            let dateBeginDraft = dateToArray(firstDate);
+            let dateEndDraft = dateToArray(secondDate);
+            let dateBeginData = parseDateArray(dateBeginDraft);
+            let dateEndData = parseDateArray(dateEndDraft);
+            let prePart = "С"
+            if (dateBeginData[1][0] == 2) {
+                prePart = "Со"
+            }
+            if ((dateBeginData[1].length == dateEndData[1].length) && (dateBeginData[1][1] == dateEndData[1][1])) {
+                dateBeginData[0] = dateBeginData[1][0];
+            }
+            if (firstDate == secondDate) {
+                datesString = `${dateEndData[0]}`;
+            } else if ((dateBeginData[1].length == dateEndData[1].length) && (dateBeginData[1][1] == dateEndData[1][1])) {
+                datesString = `${prePart} ${dateBeginData[0]} по ${dateEndData[0]}`;
+            } else {
+              datesString = `${prePart} ${dateBeginData[0]} <span class='helper-text'>по ${dateEndData[0]}</span>`;
+            }
+            return datesString;
         }
 
     let scheduleList = a.getElementsByTagName('timetable');
@@ -181,9 +257,6 @@
       citysList[i] = citysList[i].slice(startSpaces, (citysList[i].length - endSpaces));
     }
 
-    //let daysTemplate = ["пн", "вт", "ср", "чт", "пт", "сб", "вс"];
-    // let daysTemplate = ["понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье"];
-
     let mySchedule = '[';
 
     for (i = 0; i < citysList.length; i++) {
@@ -237,7 +310,8 @@
                 "timeFrom" : "${schedule[k].from_time}",
                 "timeTo" : "${schedule[k].to_time}",
                 "dataBegin" : "${schedule[k].data_begin}",
-                "dataEnd" : "${schedule[k].data_end}"
+                "dataEnd" : "${schedule[k].data_end}",
+                "fullInterval" : "${translateDates(schedule[k].data_begin, schedule[k].data_end)}"
                 },`;
           }
         }
@@ -247,7 +321,7 @@
     }
     mySchedule = `${mySchedule.slice(0, -2)}] `;
     let myScheduleList = JSON.parse(mySchedule);
-
+    console.log(myScheduleList);
     let appText = ``;
 
     for (i = 0; i < myScheduleList.length; i++) {
@@ -274,7 +348,7 @@
           for (k = 0; k < myScheduleList[i].flights[j].parts.length; k++) {
             appText += `
             <li class="flight__part-item">
-              <p class="flight__days flight__days--period">с ${myScheduleList[i].flights[j].parts[k].dataBegin} по ${myScheduleList[i].flights[j].parts[k].dataEnd}</p>
+              <p class="flight__days flight__days--period">${myScheduleList[i].flights[j].parts[k].fullInterval}</p>
               <p class="flight__days">${myScheduleList[i].flights[j].parts[k].days}</p>
               <p class="flight__time">
                 <span class="flight__time-from">${myScheduleList[i].flights[j].parts[k].timeFrom}</span> <span class="flight__time-arrow">—</span> <span class="flight__time-to">${myScheduleList[i].flights[j].parts[k].timeTo}</span>
@@ -313,7 +387,7 @@
           for (k = 0; k < myScheduleList[i].flights[j].parts.length; k++) {
             appText += `
             <li class="flight__part-item">
-              <p class="flight__days flight__days--period">с ${myScheduleList[i].flights[j].parts[k].dataBegin} по ${myScheduleList[i].flights[j].parts[k].dataEnd}</p>
+              <p class="flight__days flight__days--period">${myScheduleList[i].flights[j].parts[k].fullInterval}</p>
               <p class="flight__days">${myScheduleList[i].flights[j].parts[k].days}</p>
               <p class="flight__time">
                 <span class="flight__time-from">${myScheduleList[i].flights[j].parts[k].timeFrom}</span> <span class="flight__time-arrow">—</span> <span class="flight__time-to">${myScheduleList[i].flights[j].parts[k].timeTo}</span>
