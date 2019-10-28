@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        let dataText = [{
+                "city": "екатеринбург",
+                "flights": [{
+                    "flightNumber": "7R426.",
+                    "fromSaransk": "false",
+                    "company": "7R",
+                    "airPort": "SVX",
+                    "parts": [{
+                        "days": "чт",
+                        "timeFrom": "19:20",
+                        "timeTo": "19:10",
+                        "dataBegin": "31.10.2019",
+                        "dataEnd": "31.10.2019",
+                        "fullInterval": "31 октября"
+                    }]
+                }, {
+                    "flightNumber": "7R425",
+                    "fromSaransk": "true",
+                    "company": "7R",
+                    "airPort": "SVX",
+                    "parts": [{
+                        "days": "пт",
+                        "timeFrom": "01:10",
+                        "timeTo": "06:50",
+                        "dataBegin": "01.11.2019",
+                        "dataEnd": "01.11.2019",
+                        "fullInterval": "1 ноября"
+                    }]
+                }]
+            },
+            {
+                "city": "минеральные воды",
+                "flights": [{
+                    "flightNumber": "7R425.",
+                    "fromSaransk": "false",
+                    "company": "7R",
+                    "airPort": "MRV",
+                    "parts": [{
+                        "days": "чт",
+                        "timeFrom": "22:30",
+                        "timeTo": "00:30",
+                        "dataBegin": "31.10.2019",
+                        "dataEnd": "31.10.2019",
+                        "fullInterval": "31 октября"
+                    }]
+                }, {
+                    "flightNumber": "7R426",
+                    "fromSaransk": "true",
+                    "company": "7R",
+                    "airPort": "MRV",
+                    "parts": [{
+                        "days": "чт",
+                        "timeFrom": "19:50",
+                        "timeTo": "21:50",
+                        "dataBegin": "31.10.2019",
+                        "dataEnd": "31.10.2019",
+                        "fullInterval": "31 октября"
+                    }]
+                }]
+            },
+            {
+                "city": "москва",
+                "flights": [{
+                    "flightNumber": "7R101",
+                    "fromSaransk": "false",
+                    "company": "7R",
+                    "airPort": "VKO",
+                    "parts": [{
+                        "days": "кроме субботы",
+                        "timeFrom": "22:55",
+                        "timeTo": "00:20",
+                        "dataBegin": "10.11.2019",
+                        "dataEnd": "27.03.2020",
+                        "fullInterval": "С 10 ноября <span class='helper-text'>по 27.03.2020</span>"
+                    }]
+                }, {
+                    "flightNumber": "SU1464",
+                    "fromSaransk": "false",
+                    "company": "SU",
+                    "airPort": "SVO",
+                    "parts": [{
+                        "days": "каждый день",
+                        "timeFrom": "15:15",
+                        "timeTo": "16:45",
+                        "dataBegin": "28.10.2019",
+                        "dataEnd": "28.03.2020",
+                        "fullInterval": "С 28 октября <span class='helper-text'>по 28.03.2020</span>"
+                    }]
+                }, {
+                    "flightNumber": "7R102",
+                    "fromSaransk": "true",
+                    "company": "7R",
+                    "airPort": "VKO",
+                    "parts": [{
+                        "days": "кроме воскресенья",
+                        "timeFrom": "06:20",
+                        "timeTo": "07:45",
+                        "dataBegin": "11.11.2019",
+                        "dataEnd": "28.03.2020",
+                        "fullInterval": "С 11 ноября <span class='helper-text'>по 28.03.2020</span>"
+                    }]
+                }, {
+                    "flightNumber": "SU1465",
+                    "fromSaransk": "true",
+                    "company": "SU",
+                    "airPort": "SVO",
+                    "parts": [{
+                        "days": "каждый день",
+                        "timeFrom": "17:35",
+                        "timeTo": "19:10",
+                        "dataBegin": "28.10.2019",
+                        "dataEnd": "28.03.2020",
+                        "fullInterval": "С 28 октября <span class='helper-text'>по 28.03.2020</span>"
+                    }]
+                }]
+            },
+            {
+                "city": "санкт-петербург",
+                "flights": [{
+                    "flightNumber": "S76003",
+                    "fromSaransk": "false",
+                    "company": "S7",
+                    "airPort": "LED",
+                    "parts": [{
+                        "days": "пн, пт",
+                        "timeFrom": "14:10",
+                        "timeTo": "16:30",
+                        "dataBegin": "28.10.2019",
+                        "dataEnd": "27.03.2020",
+                        "fullInterval": "С 28 октября <span class='helper-text'>по 27.03.2020</span>"
+                    }]
+                }, {
+                    "flightNumber": "S76004",
+                    "fromSaransk": "true",
+                    "company": "S7",
+                    "airPort": "LED",
+                    "parts": [{
+                        "days": "пн, пт",
+                        "timeFrom": "17:10",
+                        "timeTo": "19:35",
+                        "dataBegin": "28.10.2019",
+                        "dataEnd": "27.03.2020",
+                        "fullInterval": "С 28 октября <span class='helper-text'>по 27.03.2020</span>"
+                    }]
+                }]
+            }
+        ]
+        let data = JSON.parse(dataText);
+    </script>
+
+</body>
+
+</html>

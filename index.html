@@ -317,7 +317,25 @@
     }
     mySchedule = `${mySchedule.slice(0, -2)}] `;
     let myScheduleList = JSON.parse(mySchedule);
-    console.log(myScheduleList);
+
+    let firstCity = [];
+    for (i = 0; i < myScheduleList.length; i++) {
+      if (myScheduleList[i].city == "санкт-петербург") {
+        firstCity = myScheduleList.splice(i, 1);
+      }
+    }
+    if (firstCity.length > 0) {
+      myScheduleList.unshift(firstCity[0]);
+      firstCity = [];
+    }
+    for (i = 0; i < myScheduleList.length; i++) {
+      if (myScheduleList[i].city == "москва") {
+        firstCity = myScheduleList.splice(i, 1);
+      }
+    }
+    if (firstCity.length > 0) {
+      myScheduleList.unshift(firstCity[0]);
+    }
     let appText = ``;
 
     for (i = 0; i < myScheduleList.length; i++) {
@@ -338,7 +356,7 @@
           appText += `
           <li class="schedule__flightslist-item">
             <section class="flight">
-              <h4 class="flight__header">Саранск<span class="flight__aircraft-arrow"> — </span>${myScheduleList[i].city}</h4>
+              <h4 class="flight__header">Саранск<span class="flight__aircraft-arrow"> — </span><nobr>${myScheduleList[i].city}</nobr></h4>
               <ul class="flight__parts">
           `;
           for (k = 0; k < myScheduleList[i].flights[j].parts.length; k++) {
