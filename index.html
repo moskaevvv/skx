@@ -30,7 +30,7 @@
     <ul class="schedule__list" id="app">
     </ul>
   </main>
-  
+
   <script>
     let url = 'src/Schedule.xml';
     var xhr = new XMLHttpRequest();
@@ -145,6 +145,12 @@
             }
           }
         }
+
+        let initDate = "";
+        for (v = (tempArray.length - 1); v >= 0; v--) {
+          initDate += `${tempArray[v]}`;
+        }
+
         for (v = 1; v < 13; v++) {
           tempArray[0] = +tempArray[0];
           if ((tempArray[1] == v) && (tempArray[2] == currentYear)) {
@@ -154,9 +160,9 @@
         }
 
         if (tempArray.length < 3) {
-          return [tempArray.join(" "), tempArray];
+          return [tempArray.join(" "), tempArray, initDate];
         } else {
-          return [tempArray.join("."), tempArray];
+          return [tempArray.join("."), tempArray, initDate];
         }
 
       }
@@ -179,7 +185,7 @@
       } else {
         datesString = `${prePart} ${dateBeginData[0]} <span class='helper-text'>по ${dateEndData[0]}</span>`;
       }
-      return datesString;
+      return [datesString, dateBeginData[2]];
     }
 
     let scheduleList = a.getElementsByTagName('timetable');
@@ -307,7 +313,8 @@
                 "timeTo" : "${schedule[k].to_time}",
                 "dataBegin" : "${schedule[k].data_begin}",
                 "dataEnd" : "${schedule[k].data_end}",
-                "fullInterval" : "${translateDates(schedule[k].data_begin, schedule[k].data_end)}"
+                "dateInit": "${translateDates(schedule[k].data_begin, schedule[k].data_end)[1]}",
+                "fullInterval" : "${translateDates(schedule[k].data_begin, schedule[k].data_end)[0]}"
                 },`;
           }
         }
@@ -317,6 +324,31 @@
     }
     mySchedule = `${mySchedule.slice(0, -2)}] `;
     let myScheduleList = JSON.parse(mySchedule);
+    console.log(myScheduleList);
+
+    for (i = 0; i < myScheduleList.length; i++) {
+      for (j = 0; j < myScheduleList[i].flights.length; j++) {
+        myScheduleList[i].flights[j].parts.sort(function (a, b) {
+          if (a.dateInit > b.dateInit) {
+            return 1;
+          }
+          if (a.dateInit < b.dateInit) {
+            return -1;
+          }
+          return 0;
+        });
+      }
+      myScheduleList[i].flights.sort(function (a, b) {
+          if (a.parts[0].dateInit > b.parts[0].dateInit) {
+            return 1;
+          }
+          if (a.parts[0].dateInit < b.parts[0].dateInit) {
+            return -1;
+          }
+          return 0;
+        });
+      
+    }
 
     let firstCity = [];
     for (i = 0; i < myScheduleList.length; i++) {
