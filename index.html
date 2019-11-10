@@ -125,6 +125,15 @@
       let dateToArray = function (dateSource) {
         return dateSource.split('');
       }
+
+      let currentDate = dateToArray(date.toISOString());
+      currentDateHash = "";
+      for (v = 0; v < 10; v++) {
+        if (currentDate[v] !== "-") {
+          currentDateHash += currentDate[v];
+        }
+      }
+
       let parseDateArray = function (dateArray) {
         let tempArray = [];
         let pointIndex = 0;
@@ -171,19 +180,22 @@
       let dateEndDraft = dateToArray(secondDate);
       let dateBeginData = parseDateArray(dateBeginDraft);
       let dateEndData = parseDateArray(dateEndDraft);
-      let prePart = "С"
+  
+      let prePart = "с"
       if (dateBeginData[1][0] == 2) {
-        prePart = "Со"
+        prePart = "со"
       }
       if ((dateBeginData[1].length == dateEndData[1].length) && (dateBeginData[1][1] == dateEndData[1][1])) {
         dateBeginData[0] = dateBeginData[1][0];
       }
       if (firstDate == secondDate) {
-        datesString = `${dateEndData[0]}`;
+        datesString = `только ${dateEndData[0]}`;
+      } else if ((dateBeginData[2] - currentDateHash) < 2) {
+        datesString = `до ${dateEndData[0]}`;
       } else if ((dateBeginData[1].length == dateEndData[1].length) && (dateBeginData[1][1] == dateEndData[1][1])) {
         datesString = `${prePart} ${dateBeginData[0]} по ${dateEndData[0]}`;
       } else {
-        datesString = `${prePart} ${dateBeginData[0]} <span class='helper-text'>по ${dateEndData[0]}</span>`;
+        datesString = `${prePart} ${dateBeginData[0]} по ${dateEndData[0]}`;
       }
       return [datesString, dateBeginData[2]];
     }
@@ -324,7 +336,6 @@
     }
     mySchedule = `${mySchedule.slice(0, -2)}] `;
     let myScheduleList = JSON.parse(mySchedule);
-    console.log(myScheduleList);
 
     for (i = 0; i < myScheduleList.length; i++) {
       for (j = 0; j < myScheduleList[i].flights.length; j++) {
@@ -394,11 +405,11 @@
           for (k = 0; k < myScheduleList[i].flights[j].parts.length; k++) {
             appText += `
             <li class="flight__part-item">
-              <p class="flight__days flight__days--period">${myScheduleList[i].flights[j].parts[k].fullInterval}</p>
               <p class="flight__days">${myScheduleList[i].flights[j].parts[k].days}</p>
               <p class="flight__time">
                 <span class="flight__time-from">${myScheduleList[i].flights[j].parts[k].timeFrom}</span> <span class="flight__time-arrow">—</span> <span class="flight__time-to">${myScheduleList[i].flights[j].parts[k].timeTo}</span>
               </p>
+              <p class="helper-text flight__days flight__days--period">${myScheduleList[i].flights[j].parts[k].fullInterval}</p>
             </li>
             `;
           }
@@ -433,11 +444,11 @@
           for (k = 0; k < myScheduleList[i].flights[j].parts.length; k++) {
             appText += `
             <li class="flight__part-item">
-              <p class="flight__days flight__days--period">${myScheduleList[i].flights[j].parts[k].fullInterval}</p>
               <p class="flight__days">${myScheduleList[i].flights[j].parts[k].days}</p>
               <p class="flight__time">
                 <span class="flight__time-from">${myScheduleList[i].flights[j].parts[k].timeFrom}</span> <span class="flight__time-arrow">—</span> <span class="flight__time-to">${myScheduleList[i].flights[j].parts[k].timeTo}</span>
               </p>
+              <p class="helper-text flight__days flight__days--period">${myScheduleList[i].flights[j].parts[k].fullInterval}</p>
             </li>
             `;
           }
