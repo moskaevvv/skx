@@ -67,6 +67,8 @@ body {
   background-color: var(--page-bg-color);
   color: var(--high-emphasis-text);
   font-size: var(--regular-font-size);
+  max-width: 768px;
+  margin: auto;
 }
 
 .schedule {
@@ -266,7 +268,7 @@ body {
   margin-top: var(--page-main-padding);
   height: auto;
   -webkit-transform: translateX(0);
-          transform: translateX(0);
+  transform: translateX(0);
   -webkit-transition: 0.5s ease-in-out;
   transition: 0.5s ease-in-out;
 }
