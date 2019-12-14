@@ -29,6 +29,7 @@ html {
   --card-padding: 16px;
   --city-nav-bg: #E9E9E9;
   --city-nav-bg-current: #FFFFFF;
+  --link-blue: #2F80ED;
   --city-nav-tab-dif: -4px;
   --city-nav-tab-transition-time: 0.2s;
   --city-nav-tab-top-padding: 11px;
@@ -275,44 +276,34 @@ body {
 }
 
 .page-header {
-  background-color: white;
-  height: 88px;
-  margin-bottom: 8px;
   position: relative;
-  padding: 14px 0 0 72px;
+  padding: var(--page-main-padding);
 }
 
-.page-header::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 72px;
-  height: 72px;
-  background: transparent url('./app-icon.png') 50% 50%;
-  background-size: cover;
-  overflow: hidden;
-}
-
-.page-header::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: var(--page-bg-color);
-  height: 8px;
-  border-radius: 8px 8px 0 0;
-
+.page-header__logo {
+  display: block;
+  margin-bottom: calc(var(--page-main-padding)/2);
 }
 
 .page-header__title {
   font-size: var(--regular-font-size);
+  max-width: 180px;
+  display: inline-block;
+}
+
+.page-header__about-link {
+  margin-left: -8px;
+  display: none;
+}
+
+.link {
+  text-decoration: none;
+  color: var(--link-blue);
 }
 
 .page-header__description {
   color: var(--helper-text);
-  max-width: 200px;;
+  max-width: 200px;
 }
 
 .flight__part-item {
