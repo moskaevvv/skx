@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Аэропорт Саранска — неофициальное расписание рейсов</title>
-  <link rel="stylesheet" href="assets/style.css?2019-12-14-part2">
+  <link rel="stylesheet" href="assets/style.css?2019-12-14-part3">
   <meta name="viewport" content="minimal-ui">
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -104,6 +104,24 @@
         daysString = daysString.slice(0, -2);
       }
       return daysString;
+    }
+
+    let airPortName = function (cityInput, airPortInput) {
+      if (cityInput == "МОСКВА") {
+        if (airPortInput == "SVO") {
+          return "Шереметьево";
+        } else if (airPortInput == "VKO") {
+          return "Внуково";
+        } else if (airPortInput == "DME") {
+          return "Домодедово";
+        } else if (airPortInput == "ZIA") {
+          return "Жуковский";
+        } else {
+          return "Москва";
+        }
+      } else {
+        return cityInput.toLowerCase();
+      }
     }
 
     let translateDates = function (firstDate, secondDate) {
@@ -316,6 +334,7 @@
             "fromSaransk" : "${fromSaransk}",
             "company" : "${shellData.ac_iata}",
             "airPort" : "${airPort}",
+            "airPortFullName" : "${airPortName(citysList[i], airPort)}",
             "parts" : [`;
         for (k = 0; k < schedule.length; k++) {
           if (schedule[k].flight_N == cityFlights[r]) {
@@ -400,7 +419,7 @@
           appText += `
           <li class="schedule__flightslist-item">
             <section class="flight">
-              <h4 class="flight__header">Саранск<span class="flight__aircraft-arrow"> — </span><nobr>${myScheduleList[i].city}</nobr></h4>
+              <h4 class="flight__header">Саранск<span class="flight__aircraft-arrow"> — </span><nobr>${myScheduleList[i].flights[j].airPortFullName}</nobr></h4>
               <ul class="flight__parts">
           `;
           for (k = 0; k < myScheduleList[i].flights[j].parts.length; k++) {
@@ -439,7 +458,7 @@
           appText += `
           <li class="schedule__flightslist-item">
             <section class="flight">
-              <h4 class="flight__header">${myScheduleList[i].city}<span class="flight__aircraft-arrow"> — </span>Саранск</h4>
+              <h4 class="flight__header">${myScheduleList[i].flights[j].airPortFullName}<span class="flight__aircraft-arrow"> — </span>Саранск</h4>
               <ul class="flight__parts">
           `;
           for (k = 0; k < myScheduleList[i].flights[j].parts.length; k++) {
@@ -476,6 +495,8 @@
 
     let app = document.querySelector('#app');
     app.innerHTML = appText;
+
+    console.log(myScheduleList);
 
     function tabSwitcher(cityId) {
       let cityItem = document.getElementById(cityId);

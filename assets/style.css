@@ -170,9 +170,9 @@ body {
 .flight__header {
   font-size: var(--flight-header-font-size);
   line-height: var(--flight-header-line-height);
-  height: var(--flight-header-height);
   position: relative;
   text-transform: capitalize;
+  margin-bottom: 32px;
 }
 
 .flight__days {
