@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Аэропорт Саранска — неофициальное расписание рейсов</title>
-  <link rel="stylesheet" href="assets/style.css?2019-12-14-part3">
+  <link rel="stylesheet" href="assets/style.css?2019-12-15">
   <meta name="viewport" content="minimal-ui">
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -37,16 +37,21 @@
       Что это такое?
     </h2>
     <p class="page-footer__paragraph">
-      Это список городов, которые соединены прямым авиасообщением с аэропортом Саранска. Все пункты в списке снабжены соответствующей информацией о расписании рейсов. Обратите внимание — для каждого города время прилёта/вылета — местное.
+      Это расписание авиарейсов, отправляющихся из&nbsp;аэропорта Саранска и&nbsp;прибывающих в&nbsp;него. В&nbsp;списке есть только города, с&nbsp;которыми налажено прямое сообщение. Обратите внимание, для всех рейсов указано местное время прилёта и&nbsp;вылета.
     </p>
     <p class="page-footer__paragraph">
-      Это расписание не является официальным. При этом мы используем данные сайта саранского аэропорта. Если от этих данных зависят важные в вашей жизни решения, пожалуйста, проверьте информацию на aviamordovia.ru или по телефону.
+      <span class="attention">Важно!</span><br/>
+      На&nbsp;странице используются данные, которые загружают в&nbsp;интернет сотрудники саранского аэропорта. При этом расписание не&nbsp;является официальным и&nbsp;носит ознакомительный характер. Если точность данных при планировании путешествия имеет критическую важность, пожалуйста, проверьте информацию на&nbsp;сайте аэропорта&nbsp;&mdash; <a class="link" href="#">aviamordovia.ru</a>.
     </p>
     <p class="page-footer__paragraph">
-      Если по какой-то причине вам неудобно пользовааться этим расписанием, и вы знаете, что можно улучшить, напишите на skx@mskv.space.
+      Если пользовааться расписанием неудобно, и&nbsp;вы&nbsp;знаете, что можно улучшить, напишите на&nbsp;<a class="link" href="mailto:skx@mskv.space">skx@mskv.space</a>
     </p>
     <p class="page-footer__paragraph page-footer__paragraph--copyright">
-      © skx.mskv.space, 2019
+      <script>
+        let date = new Date();
+        let copyRight = document.querySelector('.page-footer__paragraph--copyright');
+        copyRight.innerHTML = `© skx.mskv.space, ${date.getFullYear()}`;
+      </script>
     </p>
     
 

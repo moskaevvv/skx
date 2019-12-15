@@ -329,3 +329,12 @@ body {
   color: var(--helper-text);
   margin-top: 52px;
 }
+
+.page-footer__title {
+  font-size: var(--flight-header-font-size);
+}
+
+.attention {
+  color: red;
+  font-weight: 600;
+}
