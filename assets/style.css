@@ -295,7 +295,6 @@ body {
 
 .page-header__about-link {
   margin-left: -8px;
-  display: none;
 }
 
 .link {
@@ -314,4 +313,19 @@ body {
 
 .flight__part-item:first-child {
   margin-top: 0;
+}
+
+.page-footer {
+  padding: var(--page-main-padding);
+  max-width: 560px;
+  margin-top: 8px;
+}
+
+.page-footer__paragraph {
+  margin-top: 16px;
+}
+
+.page-footer__paragraph--copyright {
+  color: var(--helper-text);
+  margin-top: 52px;
 }
