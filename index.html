@@ -37,14 +37,20 @@
       Что это такое?
     </h2>
     <p class="page-footer__paragraph">
-      Это расписание авиарейсов, отправляющихся из&nbsp;аэропорта Саранска и&nbsp;прибывающих в&nbsp;него. В&nbsp;списке есть только города, с&nbsp;которыми налажено прямое сообщение. Обратите внимание, для всех рейсов указано местное время прилёта и&nbsp;вылета.
+      Это расписание авиарейсов, отправляющихся из&nbsp;аэропорта Саранска и&nbsp;прибывающих в&nbsp;него. В&nbsp;списке
+      есть только города, с&nbsp;которыми налажено прямое сообщение. Обратите внимание, для всех рейсов указано местное
+      время прилёта и&nbsp;вылета.
     </p>
     <p class="page-footer__paragraph">
-      <span class="attention">Важно!</span><br/>
-      На&nbsp;странице используются данные, которые загружают в&nbsp;интернет сотрудники саранского аэропорта. При этом расписание не&nbsp;является официальным и&nbsp;носит ознакомительный характер. Если точность данных при планировании путешествия имеет критическую важность, пожалуйста, проверьте информацию на&nbsp;сайте аэропорта&nbsp;&mdash; <a class="link" href="#">aviamordovia.ru</a>.
+      <span class="attention">Важно!</span><br />
+      На&nbsp;странице используются данные, которые загружают в&nbsp;интернет сотрудники саранского аэропорта. При этом
+      расписание не&nbsp;является официальным и&nbsp;носит ознакомительный характер. Если точность данных при
+      планировании путешествия имеет критическую важность, пожалуйста, проверьте информацию на&nbsp;сайте
+      аэропорта&nbsp;&mdash; <a class="link" href="#">aviamordovia.ru</a>.
     </p>
     <p class="page-footer__paragraph">
-      Если пользовааться расписанием неудобно, и&nbsp;вы&nbsp;знаете, что можно улучшить, напишите на&nbsp;<a class="link" href="mailto:skx@mskv.space">skx@mskv.space</a>
+      Если пользовааться расписанием неудобно, и&nbsp;вы&nbsp;знаете, что можно улучшить, напишите на&nbsp;<a
+        class="link" href="mailto:skx@mskv.space">skx@mskv.space</a>
     </p>
     <p class="page-footer__paragraph page-footer__paragraph--copyright">
       <script>
@@ -53,9 +59,9 @@
         copyRight.innerHTML = `© skx.mskv.space, ${date.getFullYear()}`;
       </script>
     </p>
-    
 
-    
+
+
 
   </footer>
 
@@ -208,38 +214,36 @@
 
         for (v = 1; v < 13; v++) {
           tempArray[0] = +tempArray[0];
-          if ((tempArray[1] == v) && (tempArray[2] == currentYear)) {
+          if (tempArray[1] == v) {
             tempArray[1] = monthsTemplate[v - 1];
-            tempArray.pop(tempArray[2]);
           }
         }
 
-        if (tempArray.length < 3) {
-          return [tempArray.join(" "), tempArray, initDate];
-        } else {
-          return [tempArray.join("."), tempArray, initDate];
+        if (tempArray[2] == currentYear) {
+          tempArray.pop(tempArray[2]);
         }
 
+        return [tempArray.join(" "), tempArray, initDate];
       }
       let datesString = "";
       let dateBeginDraft = dateToArray(firstDate);
       let dateEndDraft = dateToArray(secondDate);
       let dateBeginData = parseDateArray(dateBeginDraft);
       let dateEndData = parseDateArray(dateEndDraft);
-  
+
       let prePart = "с"
       if (dateBeginData[1][0] == 2) {
         prePart = "со"
       }
-      if ((dateBeginData[1].length == dateEndData[1].length) && (dateBeginData[1][1] == dateEndData[1][1])) {
-        dateBeginData[0] = dateBeginData[1][0];
+      if (dateBeginData[1][2] == dateEndData[1][2]) {
+        dateBeginData[0] = `${dateBeginData[1][0]} ${dateBeginData[1][1]}`;
       }
       if (firstDate == secondDate) {
         datesString = `только ${dateEndData[0]}`;
       } else if ((dateBeginData[2] - currentDateHash) < 2) {
         datesString = `до ${dateEndData[0]}`;
       } else if ((dateBeginData[1].length == dateEndData[1].length) && (dateBeginData[1][1] == dateEndData[1][1])) {
-        datesString = `${prePart} ${dateBeginData[0]} по ${dateEndData[0]}`;
+        datesString = `${prePart} ${dateBeginData[1][0]} по ${dateEndData[0]}`;
       } else {
         datesString = `${prePart} ${dateBeginData[0]} по ${dateEndData[0]}`;
       }
@@ -397,15 +401,15 @@
         });
       }
       myScheduleList[i].flights.sort(function (a, b) {
-          if (a.parts[0].dateInit > b.parts[0].dateInit) {
-            return 1;
-          }
-          if (a.parts[0].dateInit < b.parts[0].dateInit) {
-            return -1;
-          }
-          return 0;
-        });
-      
+        if (a.parts[0].dateInit > b.parts[0].dateInit) {
+          return 1;
+        }
+        if (a.parts[0].dateInit < b.parts[0].dateInit) {
+          return -1;
+        }
+        return 0;
+      });
+
     }
 
     let firstCity = [];
