@@ -46,12 +46,14 @@
       На&nbsp;странице используются данные, которые загружают в&nbsp;интернет сотрудники саранского аэропорта. При этом
       расписание не&nbsp;является официальным и&nbsp;носит ознакомительный характер. Если точность данных при
       планировании путешествия имеет критическую важность, пожалуйста, проверьте информацию на&nbsp;сайте
-      аэропорта&nbsp;&mdash; <a class="link" href="#">aviamordovia.ru</a>.
+      аэропорта&nbsp;&mdash; <a class="link" href="http://www.aviamordovia.ru/">aviamordovia.ru</a>.
     </p>
+    <!--
     <p class="page-footer__paragraph">
       Если пользовааться расписанием неудобно, и&nbsp;вы&nbsp;знаете, что можно улучшить, напишите на&nbsp;<a
         class="link" href="mailto:skx@mskv.space">skx@mskv.space</a>
     </p>
+    -->
     <p class="page-footer__paragraph page-footer__paragraph--copyright">
       <script>
         let date = new Date();
@@ -219,10 +221,6 @@
           }
         }
 
-        if (tempArray[2] == currentYear) {
-          tempArray.pop(tempArray[2]);
-        }
-
         return [tempArray.join(" "), tempArray, initDate];
       }
       let datesString = "";
@@ -236,7 +234,15 @@
         prePart = "со"
       }
       if (dateBeginData[1][2] == dateEndData[1][2]) {
-        dateBeginData[0] = `${dateBeginData[1][0]} ${dateBeginData[1][1]}`;
+        dateBeginData[1].pop(dateBeginData[1][2]);
+        if (dateBeginData[1][1] == dateEndData[1][1]) {
+          dateBeginData[1].pop(dateBeginData[1][1]);
+        }
+        dateBeginData[0] = dateBeginData[1].join(" ");
+      }
+      if (dateEndData[1][2] == currentYear) {
+        dateEndData[1].pop(dateEndData[1][2]);
+        dateEndData[0] = dateEndData[1].join(" ");
       }
       if (firstDate == secondDate) {
         datesString = `только ${dateEndData[0]}`;
