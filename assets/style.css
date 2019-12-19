@@ -338,3 +338,7 @@ body {
   color: red;
   font-weight: 600;
 }
+
+.likely-container {
+  margin-top: var(--page-main-padding);
+}
