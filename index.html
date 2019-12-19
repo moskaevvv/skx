@@ -349,16 +349,20 @@
           }
         }
       }
+      console.log(cityFlights);
       for (r = 0; r < cityFlights.length; r++) {
         let shellData = undefined;
         let airPort = undefined;
         let fromSaransk = undefined;
         for (s = 0; s < schedule.length; s++) {
-          if (schedule[s].flight_N == cityFlights[r]) {
-            shellData = schedule[s];
-            break;
+          if ((schedule[s].from_ap_city_name == citysList[i]) || (schedule[s].to_ap_city_name == citysList[i])) {
+            if (schedule[s].flight_N == cityFlights[r]) {
+              shellData = schedule[s];
+              break;
+            }
           }
         }
+
         if (shellData.from_ap_city_name !== "САРАНСК") {
           fromSaransk = false;
           airPort = shellData.from_ap_iata;
@@ -366,6 +370,7 @@
           airPort = shellData.to_ap_iata;
           fromSaransk = true;
         }
+
         mySchedule += `{
             "flightNumber" : "${cityFlights[r]}",
             "fromSaransk" : "${fromSaransk}",
@@ -374,8 +379,9 @@
             "airPortFullName" : "${airPortName(citysList[i], airPort)}",
             "parts" : [`;
         for (k = 0; k < schedule.length; k++) {
-          if (schedule[k].flight_N == cityFlights[r]) {
-            mySchedule += `
+          if ((schedule[k].from_ap_city_name == citysList[i]) || (schedule[k].to_ap_city_name == citysList[i])) {
+            if (schedule[k].flight_N == cityFlights[r]) {
+              mySchedule += `
                 {
                 "days" : "${translateDays(schedule[k].days_N)}",
                 "timeFrom" : "${schedule[k].from_time}",
@@ -385,6 +391,7 @@
                 "dateInit": "${translateDates(schedule[k].data_begin, schedule[k].data_end)[1]}",
                 "fullInterval" : "${translateDates(schedule[k].data_begin, schedule[k].data_end)[0]}"
                 },`;
+            }
           }
         }
         mySchedule = `${mySchedule.slice(0, -1)}]}, `;
