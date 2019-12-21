@@ -337,7 +337,7 @@ body {
 }
 
 .page-footer__title {
-  font-size: var(--regular-font-size);
+  font-size: var(--flight-header-font-size);
 }
 
 .attention {
