@@ -294,12 +294,16 @@ body {
 }
 
 .page-header__about-link {
-  margin-left: -8px;
+  margin-left: -2px;
 }
 
 .link {
   text-decoration: none;
   color: var(--link-blue);
+}
+
+.link:hover {
+  text-decoration: underline;
 }
 
 .page-header__description {
@@ -323,6 +327,7 @@ body {
 
 .page-footer__paragraph {
   margin-top: 16px;
+  font-size: var(--regular-font-size);
 }
 
 .page-footer__paragraph--copyright {
@@ -340,5 +345,5 @@ body {
 }
 
 .likely-container {
-  margin-top: var(--page-main-padding);
+  margin-top: calc(var(--page-main-padding)*0.5);
 }
