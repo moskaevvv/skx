@@ -295,6 +295,7 @@ body {
 
 .page-header__about-link {
   margin-left: -2px;
+  font-size: var(--regular-font-size);
 }
 
 .link {
@@ -336,7 +337,7 @@ body {
 }
 
 .page-footer__title {
-  font-size: var(--flight-header-font-size);
+  font-size: var(--regular-font-size);
 }
 
 .attention {
@@ -345,5 +346,5 @@ body {
 }
 
 .likely-container {
-  margin-top: calc(var(--page-main-padding)*0.5);
+  margin-top: calc(var(--page-main-padding)*2);
 }
