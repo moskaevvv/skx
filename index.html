@@ -284,7 +284,7 @@
       }
       if (firstDate == secondDate) {
         datesString = `только ${dateEndData[0]}`;
-      } else if ((dateBeginData[2] - currentDateHash) < 2) {
+      } else if ((dateBeginData[2] - currentDateHash) <= 2) {
         datesString = `до ${dateEndData[0]}`;
       } else if ((dateBeginData[1].length == dateEndData[1].length) && (dateBeginData[1][1] == dateEndData[1][1])) {
         datesString = `${prePart} ${dateBeginData[1][0]} по ${dateEndData[0]}`;
