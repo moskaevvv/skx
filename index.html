@@ -50,6 +50,10 @@
 </head>
 
 <body>
+  <aside class="flight-info">
+    <div class="flight-info__close-btn" onclick="hideFlightInfo()"></div>
+    <div class="flight-info__content"></div>
+  </aside>
   <header class="page-header">
     <img src="/assets/project-logo.svg" alt="" class="page-header__logo">
     <h1 class="page-header__title">
@@ -96,7 +100,7 @@
       <script>
         let date = new Date();
         let copyRight = document.querySelector('.page-footer__paragraph--copyright');
-        copyRight.innerHTML = `© skx.mskv.space, ${date.getFullYear()}`;
+        copyRight.innerHTML = `© skx.mskv.space, 2019—${date.getFullYear()}`;
       </script>
     </p>
 
@@ -106,6 +110,7 @@
   </footer>
 
   <script>
+
     let url = 'src/Schedule.xml';
     var xhr = new XMLHttpRequest();
     let a;
@@ -387,7 +392,6 @@
           }
         }
       }
-      console.log(cityFlights);
       for (r = 0; r < cityFlights.length; r++) {
         let shellData = undefined;
         let airPort = undefined;
@@ -499,7 +503,7 @@
       for (j = 0; j < myScheduleList[i].flights.length; j++) {
         if (myScheduleList[i].flights[j].fromSaransk == "true") {
           appText += `
-          <li class="schedule__flightslist-item">
+          <li class="schedule__flightslist-item" onclick="showFlightInfo(${i}, ${j})">
             <section class="flight">
               <h4 class="flight__header">Саранск<span class="flight__aircraft-arrow"> — </span><nobr>${myScheduleList[i].flights[j].airPortFullName}</nobr></h4>
               <ul class="flight__parts">
@@ -579,6 +583,20 @@
     app.innerHTML = appText;
 
     console.log(myScheduleList);
+
+    let flightInfoPanel = document.querySelector('.flight-info');
+    let showFlightInfo = function(v, w) {
+      flightInfoPanel.classList.toggle('flight-info--visible');
+      document.querySelector('.schedule').style.height = "0";
+      document.querySelector('.page-footer').style.display = "none";
+      let flightInfoContent = `${myScheduleList[v].city} (${myScheduleList[v].flights[w].airPort}) — ${myScheduleList[v].flights[w].flightNumber}`;
+      document.querySelector('.flight-info__content').innerHTML = `${flightInfoContent}`;
+          };
+    let hideFlightInfo = function() {
+      flightInfoPanel.classList.toggle('flight-info--visible');
+      document.querySelector('.schedule').style.height = "auto";
+      document.querySelector('.page-footer').style.display = "block";
+    };
 
     function tabSwitcher(cityId) {
       let cityItem = document.getElementById(cityId);
