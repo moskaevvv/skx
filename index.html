@@ -419,6 +419,8 @@
             "company" : "${shellData.ac_iata}",
             "airPort" : "${airPort}",
             "airPortFullName" : "${airPortName(citysList[i], airPort)}",
+            "fromApName" : "${shellData.from_ap_name.toLowerCase()}",
+            "toApName" : "${shellData.to_ap_name.toLowerCase()}",
             "parts" : [`;
         for (k = 0; k < schedule.length; k++) {
           if ((schedule[k].from_ap_city_name == citysList[i]) || (schedule[k].to_ap_city_name == citysList[i])) {
@@ -589,7 +591,7 @@
       flightInfoPanel.classList.toggle('flight-info--visible');
       document.querySelector('.schedule').style.height = "0";
       document.querySelector('.page-footer').style.display = "none";
-      let flightInfoContent = `${myScheduleList[v].city} (${myScheduleList[v].flights[w].airPort}) — ${myScheduleList[v].flights[w].flightNumber}`;
+      let flightInfoContent = `<h2 class="schedule__city-header">${myScheduleList[v].flights[w].fromApName} — ${myScheduleList[v].flights[w].toApName}</h2> (${myScheduleList[v].flights[w].airPort}) — ${myScheduleList[v].flights[w].flightNumber}`;
       document.querySelector('.flight-info__content').innerHTML = `${flightInfoContent}`;
           };
     let hideFlightInfo = function() {
