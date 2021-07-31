@@ -302,7 +302,7 @@
       scheduleRowsArray.push(scheduleRows[i].getElementsByTagName('*'));
       scheduleJSON += '{';
       for (j = 0; j < scheduleRowsArray[i].length; j++) {
-        if (scheduleRowsArray[i][j].tagName !== "ac_name") {
+        if ((scheduleRowsArray[i][j].tagName !== "ac_name") && (scheduleRowsArray[i][j].tagName !== "ac_name_short")) {
           scheduleJSON = scheduleJSON + '"' + scheduleRowsArray[i][j].tagName + '":"' + scheduleRowsArray[i][j]
             .textContent + '",';
         }
