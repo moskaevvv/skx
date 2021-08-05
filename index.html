@@ -379,7 +379,11 @@
 
       for (z = 0; z < schedule.length; z++) {
         if (schedule[z].to_ap_city_name == citysList[i]) {
-          toCityFlightsAll.push(schedule[z].flight_N);
+          if ((schedule[z].flight_N.slice(-1)) == ".") {
+            toCityFlightsAll.push(schedule[z].flight_N.substring(0, str.length - 1));
+          } else {
+            toCityFlightsAll.push(schedule[z].flight_N);
+          }
         }
       }
       for (p = 0; p < toCityFlightsAll.length; p++) {
@@ -393,7 +397,11 @@
 
       for (z = 0; z < schedule.length; z++) {
         if (schedule[z].from_ap_city_name == citysList[i]) {
-          fromCityFlightsAll.push(schedule[z].flight_N);
+          if ((schedule[z].flight_N.slice(-1)) == ".") {
+            fromCityFlightsAll.push(schedule[z].flight_N.substring(0, schedule[z].flight_N.length - 1));
+          } else {
+            fromCityFlightsAll.push(schedule[z].flight_N);
+          }
         }
       }
       for (p = 0; p < fromCityFlightsAll.length; p++) {
@@ -411,7 +419,8 @@
         let fromSaransk = true;
         for (s = 0; s < schedule.length; s++) {
           if (schedule[s].to_ap_city_name == citysList[i]) {
-            if (schedule[s].flight_N == toCityFlights[r]) {
+            let dottedFlightNumber = toCityFlights[r] + ".";
+            if (schedule[s].flight_N == toCityFlights[r] || dottedFlightNumber) {
               shellData = schedule[s];
               break;
             }
@@ -433,7 +442,8 @@
             "parts" : [`;
         for (k = 0; k < schedule.length; k++) {
           if (schedule[k].to_ap_city_name == citysList[i]) {
-            if (schedule[k].flight_N == toCityFlights[r]) {
+            let dottedFlightNumber = toCityFlights[r] + ".";
+            if (schedule[k].flight_N == toCityFlights[r] || dottedFlightNumber) {
               mySchedule += `
                 {
                 "days" : "${translateDays(schedule[k].days_N)}",
@@ -456,7 +466,8 @@
         let fromSaransk = false;
         for (s = 0; s < schedule.length; s++) {
           if (schedule[s].from_ap_city_name == citysList[i]) {
-            if (schedule[s].flight_N == fromCityFlights[r]) {
+            let dottedFlightNumber = fromCityFlights[r] + ".";
+            if (schedule[s].flight_N == fromCityFlights[r] || dottedFlightNumber) {
               shellData = schedule[s];
               break;
             }
@@ -478,7 +489,8 @@
             "parts" : [`;
         for (k = 0; k < schedule.length; k++) {
           if (schedule[k].from_ap_city_name == citysList[i]) {
-            if (schedule[k].flight_N == fromCityFlights[r]) {
+            let dottedFlightNumber = fromCityFlights[r] + ".";
+            if (schedule[k].flight_N == fromCityFlights[r] || dottedFlightNumber) {
               mySchedule += `
                 {
                 "days" : "${translateDays(schedule[k].days_N)}",
@@ -498,6 +510,7 @@
       mySchedule = `${mySchedule.slice(0, -2)}]}, `;
     }
     mySchedule = `${mySchedule.slice(0, -2)}] `;
+    console.log(mySchedule);
     let myScheduleList = JSON.parse(mySchedule);
 
     for (i = 0; i < myScheduleList.length; i++) {
