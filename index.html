@@ -372,29 +372,46 @@
       {
         "city" : "${citysList[i].toLowerCase()}",
         "flights" : [`;
-      let cityFlightsAll = [];
-      let cityFlights = [];
+      let toCityFlightsAll = [];
+      let toCityFlights = [];
+      let fromCityFlightsAll = [];
+      let fromCityFlights = [];
+
       for (z = 0; z < schedule.length; z++) {
-        if (schedule[z].to_ap_city_name == citysList[i] || schedule[z].from_ap_city_name == citysList[i]) {
-          cityFlightsAll.push(schedule[z].flight_N);
+        if (schedule[z].to_ap_city_name == citysList[i]) {
+          toCityFlightsAll.push(schedule[z].flight_N);
         }
       }
-      for (p = 0; p < cityFlightsAll.length; p++) {
-        cityFlights.push(cityFlightsAll[p]);
-        for (n = (cityFlights.length - 2); n >= 0; n--) {
-          if (cityFlightsAll[p] == cityFlights[n]) {
-            cityFlights.pop();
+      for (p = 0; p < toCityFlightsAll.length; p++) {
+        toCityFlights.push(toCityFlightsAll[p]);
+        for (n = (toCityFlights.length - 2); n >= 0; n--) {
+          if (toCityFlightsAll[p] == toCityFlights[n]) {
+            toCityFlights.pop();
           }
         }
       }
-      console.log(cityFlights);
-      for (r = 0; r < cityFlights.length; r++) {
+
+      for (z = 0; z < schedule.length; z++) {
+        if (schedule[z].from_ap_city_name == citysList[i]) {
+          fromCityFlightsAll.push(schedule[z].flight_N);
+        }
+      }
+      for (p = 0; p < fromCityFlightsAll.length; p++) {
+        fromCityFlights.push(fromCityFlightsAll[p]);
+        for (n = (fromCityFlights.length - 2); n >= 0; n--) {
+          if (fromCityFlightsAll[p] == fromCityFlights[n]) {
+            fromCityFlights.pop();
+          }
+        }
+      }
+
+      for (r = 0; r < toCityFlights.length; r++) {
         let shellData = undefined;
         let airPort = undefined;
-        let fromSaransk = undefined;
+        let fromSaransk = true;
         for (s = 0; s < schedule.length; s++) {
-          if ((schedule[s].from_ap_city_name == citysList[i]) || (schedule[s].to_ap_city_name == citysList[i])) {
-            if (schedule[s].flight_N == cityFlights[r]) {
+          if (schedule[s].to_ap_city_name == citysList[i]) {
+            if (schedule[s].flight_N == toCityFlights[r]) {
               shellData = schedule[s];
               break;
             }
@@ -402,23 +419,21 @@
         }
 
         if (shellData.from_ap_city_name !== "САРАНСК") {
-          fromSaransk = false;
           airPort = shellData.from_ap_iata;
         } else {
           airPort = shellData.to_ap_iata;
-          fromSaransk = true;
         }
 
         mySchedule += `{
-            "flightNumber" : "${cityFlights[r]}",
+            "flightNumber" : "${toCityFlights[r]}",
             "fromSaransk" : "${fromSaransk}",
             "company" : "${shellData.ac_icao}",
             "airPort" : "${airPort}",
             "airPortFullName" : "${airPortName(citysList[i], airPort)}",
             "parts" : [`;
         for (k = 0; k < schedule.length; k++) {
-          if ((schedule[k].from_ap_city_name == citysList[i]) || (schedule[k].to_ap_city_name == citysList[i])) {
-            if (schedule[k].flight_N == cityFlights[r]) {
+          if (schedule[k].to_ap_city_name == citysList[i]) {
+            if (schedule[k].flight_N == toCityFlights[r]) {
               mySchedule += `
                 {
                 "days" : "${translateDays(schedule[k].days_N)}",
@@ -434,6 +449,52 @@
         }
         mySchedule = `${mySchedule.slice(0, -1)}]}, `;
       }
+
+      for (r = 0; r < fromCityFlights.length; r++) {
+        let shellData = undefined;
+        let airPort = undefined;
+        let fromSaransk = false;
+        for (s = 0; s < schedule.length; s++) {
+          if (schedule[s].from_ap_city_name == citysList[i]) {
+            if (schedule[s].flight_N == fromCityFlights[r]) {
+              shellData = schedule[s];
+              break;
+            }
+          }
+        }
+
+        if (shellData.from_ap_city_name !== "САРАНСК") {
+          airPort = shellData.from_ap_iata;
+        } else {
+          airPort = shellData.to_ap_iata;
+        }
+
+        mySchedule += `{
+            "flightNumber" : "${fromCityFlights[r]}",
+            "fromSaransk" : "${fromSaransk}",
+            "company" : "${shellData.ac_icao}",
+            "airPort" : "${airPort}",
+            "airPortFullName" : "${airPortName(citysList[i], airPort)}",
+            "parts" : [`;
+        for (k = 0; k < schedule.length; k++) {
+          if (schedule[k].from_ap_city_name == citysList[i]) {
+            if (schedule[k].flight_N == fromCityFlights[r]) {
+              mySchedule += `
+                {
+                "days" : "${translateDays(schedule[k].days_N)}",
+                "timeFrom" : "${schedule[k].from_time}",
+                "timeTo" : "${schedule[k].to_time}",
+                "dataBegin" : "${schedule[k].data_begin}",
+                "dataEnd" : "${schedule[k].data_end}",
+                "dateInit": "${translateDates(schedule[k].data_begin, schedule[k].data_end)[1]}",
+                "fullInterval" : "${translateDates(schedule[k].data_begin, schedule[k].data_end)[0]}"
+                },`;
+            }
+          }
+        }
+        mySchedule = `${mySchedule.slice(0, -1)}]}, `;
+      }
+
       mySchedule = `${mySchedule.slice(0, -2)}]}, `;
     }
     mySchedule = `${mySchedule.slice(0, -2)}] `;
@@ -577,8 +638,6 @@
 
     let app = document.querySelector('#app');
     app.innerHTML = appText;
-
-    console.log(myScheduleList);
 
     function tabSwitcher(cityId) {
       let cityItem = document.getElementById(cityId);
