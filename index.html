@@ -380,7 +380,7 @@
       for (z = 0; z < schedule.length; z++) {
         if (schedule[z].to_ap_city_name == citysList[i]) {
           if ((schedule[z].flight_N.slice(-1)) == ".") {
-            toCityFlightsAll.push(schedule[z].flight_N.substring(0, str.length - 1));
+            toCityFlightsAll.push(schedule[z].flight_N.substring(0, schedule[z].flight_N.length - 1));
           } else {
             toCityFlightsAll.push(schedule[z].flight_N);
           }
@@ -420,7 +420,7 @@
         for (s = 0; s < schedule.length; s++) {
           if (schedule[s].to_ap_city_name == citysList[i]) {
             let dottedFlightNumber = toCityFlights[r] + ".";
-            if (schedule[s].flight_N == toCityFlights[r] || dottedFlightNumber) {
+            if ((schedule[s].flight_N == toCityFlights[r]) || (schedule[s].flight_N == dottedFlightNumber)) {
               shellData = schedule[s];
               break;
             }
@@ -443,7 +443,7 @@
         for (k = 0; k < schedule.length; k++) {
           if (schedule[k].to_ap_city_name == citysList[i]) {
             let dottedFlightNumber = toCityFlights[r] + ".";
-            if (schedule[k].flight_N == toCityFlights[r] || dottedFlightNumber) {
+            if ((schedule[k].flight_N == toCityFlights[r]) || (schedule[k].flight_N == dottedFlightNumber)) {
               mySchedule += `
                 {
                 "days" : "${translateDays(schedule[k].days_N)}",
@@ -467,7 +467,7 @@
         for (s = 0; s < schedule.length; s++) {
           if (schedule[s].from_ap_city_name == citysList[i]) {
             let dottedFlightNumber = fromCityFlights[r] + ".";
-            if (schedule[s].flight_N == fromCityFlights[r] || dottedFlightNumber) {
+            if ((schedule[s].flight_N == fromCityFlights[r]) || (schedule[s].flight_N == dottedFlightNumber)) {
               shellData = schedule[s];
               break;
             }
@@ -490,7 +490,7 @@
         for (k = 0; k < schedule.length; k++) {
           if (schedule[k].from_ap_city_name == citysList[i]) {
             let dottedFlightNumber = fromCityFlights[r] + ".";
-            if (schedule[k].flight_N == fromCityFlights[r] || dottedFlightNumber) {
+            if ((schedule[k].flight_N == fromCityFlights[r]) || (schedule[k].flight_N == dottedFlightNumber)) {
               mySchedule += `
                 {
                 "days" : "${translateDays(schedule[k].days_N)}",
