@@ -434,9 +434,9 @@
         }
 
         mySchedule += `{
-            "flightNumber" : "${toCityFlights[r]}",
+            "flightNumber" : ["${toCityFlights[r]}"],
             "fromSaransk" : "${fromSaransk}",
-            "company" : "${shellData.ac_icao}",
+            "company" : ["${shellData.ac_icao}"],
             "airPort" : "${airPort}",
             "airPortFullName" : "${airPortName(citysList[i], airPort)}",
             "parts" : [`;
@@ -481,9 +481,9 @@
         }
 
         mySchedule += `{
-            "flightNumber" : "${fromCityFlights[r]}",
+            "flightNumber" : ["${fromCityFlights[r]}"],
             "fromSaransk" : "${fromSaransk}",
-            "company" : "${shellData.ac_icao}",
+            "company" : ["${shellData.ac_icao}"],
             "airPort" : "${airPort}",
             "airPortFullName" : "${airPortName(citysList[i], airPort)}",
             "parts" : [`;
@@ -554,6 +554,13 @@
     if (firstCity.length > 0) {
       myScheduleList.unshift(firstCity[0]);
     }
+
+    console.log(myScheduleList);
+
+    for (i = 0; i < myScheduleList.length; i++) {
+      
+    }
+
     let appText = ``;
 
     for (i = 0; i < myScheduleList.length; i++) {
@@ -580,7 +587,7 @@
           for (k = 0; k < myScheduleList[i].flights[j].parts.length; k++) {
             appText += `
             <li class="flight__part-item">
-              <p class="flight__days">${myScheduleList[i].flights[j].parts[k].days}</p>
+              <p class="flight__days flight__days--days">${myScheduleList[i].flights[j].parts[k].days}</p>
               <p class="flight__time">
                 <span class="flight__time-from">${myScheduleList[i].flights[j].parts[k].timeFrom}</span> <span class="flight__time-arrow">—</span> <span class="flight__time-to">${myScheduleList[i].flights[j].parts[k].timeTo}</span>
               </p>
@@ -591,9 +598,9 @@
           appText += `
           </ul>
           <div class="flight__flight-info">
-            <p class="flight__flight-number">${myScheduleList[i].flights[j].flightNumber}</p>
-            <div class="flight__ac-id flight__ac-id--7R">Авиакомпания ${myScheduleList[i].flights[j].company}
-              <img src="assets/icons/${myScheduleList[i].flights[j].company}.svg" alt="">
+            <p class="flight__flight-number">${myScheduleList[i].flights[j].flightNumber.join(' ')}</p>
+            <div class="flight__ac-id flight__ac-id--7R">Авиакомпания ${myScheduleList[i].flights[j].company.join(', ')}
+              <img src="assets/icons/${myScheduleList[i].flights[j].company.join('-')}.svg" alt="">
             </div>
           </div>
           </section>
@@ -619,7 +626,7 @@
           for (k = 0; k < myScheduleList[i].flights[j].parts.length; k++) {
             appText += `
             <li class="flight__part-item">
-              <p class="flight__days">${myScheduleList[i].flights[j].parts[k].days}</p>
+              <p class="flight__days flight__days--days">${myScheduleList[i].flights[j].parts[k].days}</p>
               <p class="flight__time">
                 <span class="flight__time-from">${myScheduleList[i].flights[j].parts[k].timeFrom}</span> <span class="flight__time-arrow">—</span> <span class="flight__time-to">${myScheduleList[i].flights[j].parts[k].timeTo}</span>
               </p>
@@ -630,9 +637,9 @@
           appText += `
           </ul>
           <div class="flight__flight-info">
-            <p class="flight__flight-number">${myScheduleList[i].flights[j].flightNumber}</p>
-            <div class="flight__ac-id flight__ac-id--7R">Авиакомпания ${myScheduleList[i].flights[j].company}
-              <img src="assets/icons/${myScheduleList[i].flights[j].company}.svg" alt="">
+            <p class="flight__flight-number">${myScheduleList[i].flights[j].flightNumber.join(' ')}</p>
+            <div class="flight__ac-id flight__ac-id--7R">Авиакомпания ${myScheduleList[i].flights[j].company.join(', ')}
+              <img src="assets/icons/${myScheduleList[i].flights[j].company.join('-')}.svg" alt="">
             </div>
           </div>
           </section>
