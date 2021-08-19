@@ -511,7 +511,42 @@
     }
     mySchedule = `${mySchedule.slice(0, -2)}] `;
     let myScheduleList = JSON.parse(mySchedule);
+    
+    let flightControlSum = function (flightExample) {
+      let thisPartsSum;
+      for (a = 0; a < flightExample.parts.length; a++) {
+        thisPartsSum += (flightExample.parts[a].dataBegin + flightExample.parts[a].dataEnd + flightExample.parts[a].days + flightExample.parts[a].fullInterval + flightExample.parts[a].timeFrom + flightExample.parts[a].timeTo);
+      }
+      return (flightExample.airPort + flightExample.fromSaransk + thisPartsSum);
+    }
 
+    for (i = 0; i < myScheduleList.length; i++) {
+      let preCombinedFlights = myScheduleList[i].flights;
+      let combinedFlights = [];
+      let allThisIndexes = [];
+      for (j = 0; j < myScheduleList[i].flights.length; j++)  {
+        let thisIndexes = [];
+        for (k = 0; k < preCombinedFlights.length; k++) {
+          if (flightControlSum(myScheduleList[i].flights[j]) == flightControlSum(preCombinedFlights[k]) && (allThisIndexes.indexOf(k) == -1)) {
+            thisIndexes.push(k);
+            allThisIndexes.push(k);
+          }
+        }
+        if (thisIndexes.length > 0) {
+          combinedFlights.push(preCombinedFlights[thisIndexes[0]]);
+          if (thisIndexes.length > 1) {
+            let combinedFlightsLast = combinedFlights.length - 1;
+            for (b = 1; b < thisIndexes.length; b++) {
+              combinedFlights[combinedFlightsLast].flightNumber.push(preCombinedFlights[thisIndexes[b]].flightNumber[0]);
+              combinedFlights[combinedFlightsLast].company.push(preCombinedFlights[thisIndexes[b]].company[0]);
+            }
+          }
+        }
+      }
+      myScheduleList[i].flights = combinedFlights;
+    }
+
+   
     for (i = 0; i < myScheduleList.length; i++) {
       for (j = 0; j < myScheduleList[i].flights.length; j++) {
         myScheduleList[i].flights[j].parts.sort(function (a, b) {
@@ -553,12 +588,6 @@
     }
     if (firstCity.length > 0) {
       myScheduleList.unshift(firstCity[0]);
-    }
-
-    console.log(myScheduleList);
-
-    for (i = 0; i < myScheduleList.length; i++) {
-      
     }
 
     let appText = ``;
